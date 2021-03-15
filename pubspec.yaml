@@ -1,0 +1,61 @@
+name: my_flutter_bloc
+description: My Flutter BLoC
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter_localizations:
+    sdk: flutter
+  flutter:
+    sdk: flutter
+
+  # Utilities
+  cupertino_icons: ^1.0.0
+  device_info: ^1.0.0
+  package_info: ^0.4.3+4
+  url_launcher: ^5.7.10
+  animations: ^1.0.0+5
+  modal_bottom_sheet: ^1.0.0+1
+
+  # State Managements
+  flutter_bloc: ^6.1.2
+  equatable: ^1.2.6
+  dio: ^3.0.10
+  rxdart: ^0.25.0
+  get_storage: ^1.4.0
+
+dev_dependencies:
+  flutter_driver:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  test: any
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/json/provinsi.json
+    - assets/json/kabupaten.json
+    - assets/json/kecamatan.json
+    - assets/
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+    - family: RobotoMedium
+      fonts:
+        - asset: assets/fonts/Roboto-Medium.ttf
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/poppins.ttf
+    - family: QuicksandMedium
+      fonts:
+        - asset: assets/fonts/Quicksand-Medium.ttf
