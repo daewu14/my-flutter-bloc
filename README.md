@@ -1,6 +1,6 @@
 # my_flutter_bloc
 
-My Flutter BLoC
+My Base Flutter BLoC
 
 ## Getting Started
 
