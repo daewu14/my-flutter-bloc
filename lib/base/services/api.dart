@@ -51,10 +51,12 @@ class Api {
     _call.options.headers['Accept'] = "application/json";
     _call.options.headers['accept'] = "application/json";
     _call.options.headers['platform'] = Platform.operatingSystem;
+    _call.options.headers['operation-system'] = Platform.operatingSystem;
     _call.options.headers['device-id'] = deviceId;
     _call.options.headers['device-name'] = deviceName;
     _call.options.headers['device-model'] = deviceModel;
     _call.options.headers['device-system-version'] = deviceSystemVersion;
+    _call.options.headers['app-version'] = MyDeviceInfo().appVersionCode();
 
     _showLogWhenDebug("Header", _call.options.headers.toString());
     return true;

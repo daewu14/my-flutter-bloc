@@ -11,6 +11,8 @@ class MyConfig {
   static final String TOKEN_STRING_KEY = 'TOKEN_STRING_KEY';
   static final String EMAIL_KEY = 'EMAIL_KEY';
   static final String FCM_TOKEN_KEY = 'FCM_TOKEN_KEY';
+  static final String APP_VERSION_CODE = '__APP_VERSION_CODE__';
+  static final String APP_VERSION_NAME = '__APP_VERSION_NAME__';
 
 
   /// CUSTOM CONFIG APP
