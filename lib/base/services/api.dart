@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'result.dart';
 import '../../x_src/my_res.dart';
 import '../../x_utils/my_device_info.dart';
@@ -20,12 +21,7 @@ class Api {
   static final int _connectionTimeOut = 5000;
   static final int _receiveTimeOut = 3000;
 
-  // or new Dio with a BaseOptions instance.
-  BaseOptions options = BaseOptions(
-      baseUrl: urlToCall,
-      connectTimeout: 5000,
-      receiveTimeout: 3000,
-      headers: {});
+  bool _isMultipart = false;
 
   Dio _call = Dio();
 
@@ -46,17 +42,26 @@ class Api {
     var deviceName = await MyDeviceInfo().deviceName();
     var deviceModel = await MyDeviceInfo().deviceModel();
     var deviceSystemVersion = await MyDeviceInfo().deviceSystemVersion();
-    _call.options.headers['Content-Type'] = "application/x-www-form-urlencoded";
-    _call.options.headers['content-type'] = "application/x-www-form-urlencoded";
-    _call.options.headers['Accept'] = "application/json";
-    _call.options.headers['accept'] = "application/json";
+    var langCode = MyDeviceInfo().langCode();
+
+    if (!_isMultipart) {
+      _call.options.headers['Content-Type'] = "application/x-www-form-urlencoded";
+      _call.options.headers['content-type'] = "application/x-www-form-urlencoded";
+      _call.options.headers['Accept'] = "application/json";
+      _call.options.headers['accept'] = "application/json";
+    }
+
     _call.options.headers['platform'] = Platform.operatingSystem;
     _call.options.headers['operation-system'] = Platform.operatingSystem;
     _call.options.headers['device-id'] = deviceId;
+    _call.options.headers['lang'] = langCode;
     _call.options.headers['device-name'] = deviceName;
     _call.options.headers['device-model'] = deviceModel;
-    _call.options.headers['device-system-version'] = deviceSystemVersion;
     _call.options.headers['app-version'] = MyDeviceInfo().appVersionCode();
+    _call.options.headers['device-system-version'] = deviceSystemVersion;
+
+    String token = GetStorage().read(MyConfig.TOKEN_STRING_KEY);
+    if(token != null) _call.options.headers['Authorization'] = "Bearer $token";
 
     _showLogWhenDebug("Header", _call.options.headers.toString());
     return true;
@@ -79,6 +84,7 @@ class Api {
       _result.body = res.data;
       return _result;
     } catch (e) {
+      _result.isError = true;
       _showLogWhenDebug("Error Response", "${e.toString()}");
       return _result;
     }
@@ -103,8 +109,58 @@ class Api {
       _result.body = res.data;
       return _result;
     } catch (e) {
+      _result.isError = true;
       _showLogWhenDebug("Error Response", "${e.toString()}");
       return _result;
+    }
+  }
+
+  /// call API.
+  /// return [Result] model.
+  /// Method POST.
+  Future<Result> postMultipartResult(
+      {@required String endPoint = "", FormData data}) async {
+    // data = data ?? {};
+    _isMultipart = true;
+
+    await _init();
+    Response res;
+
+    _showLogWhenDebug("POST URL", "$urlToCall$endPoint");
+    _showLogWhenDebug("PARAMS", "${data.fields}");
+
+    try {
+      res = await _call.post(endPoint, data: data);
+      _showLogWhenDebug("Result", "${res.data.toString()}");
+      _result =  Result.fromMap(res.data);
+      _result.body = res.data;
+      return _result;
+    } catch (e) {
+      _result.isError = true;
+      _showLogWhenDebug("Error Response", "${e.toString()}");
+      return _result;
+    }
+  }
+
+  /// call API.
+  /// return [BaseResponse] model.
+  /// Method GET.
+  Future<BaseResponse> getManualUri(
+      {@required String url = "", @required String endPoint = "", Map<String, dynamic> data}) async {
+    data = data ?? {};
+    var res;
+    _call.options.baseUrl = url;
+    _call.options.connectTimeout = _connectionTimeOut;
+    _call.options.receiveTimeout = _receiveTimeOut;
+    _showLogWhenDebug("GET URL", "$url$endPoint");
+    _showLogWhenDebug("PARAMS", "${data.toString()}");
+    try {
+      res = await _call.get(endPoint, queryParameters: data);
+      _showLogWhenDebug("Result", "${res.data.toString()}");
+      return BaseResponse(status: Status.isOk, text: "", data: res);
+    } catch (e) {
+      return BaseResponse(
+          status: Status.catchError, text: e.toString(), data: null);
     }
   }
 

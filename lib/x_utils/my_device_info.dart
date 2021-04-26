@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import '../x_src/my_res.dart';
 import 'package:device_info/device_info.dart';
 import 'package:get_storage/get_storage.dart';
-import '../x_src/my_config.dart';
 
 /// createdby Daewu Bintara
 /// Friday, 1/22/21
@@ -62,5 +62,7 @@ class MyDeviceInfo {
   String appVersionCode() => GetStorage().read(MyConfig.APP_VERSION_CODE);
 
   String appVersionName() => GetStorage().read(MyConfig.APP_VERSION_NAME);
+
+  String langCode() => GetStorage().read(MyConfig.LOCAL_KEY);
 
 }

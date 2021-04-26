@@ -21,6 +21,11 @@ dependencies:
   url_launcher: ^5.7.10
   animations: ^1.0.0+5
   modal_bottom_sheet: ^1.0.0+1
+  photo_view: ^0.10.3
+  html: ^0.14.0+4
+  image_crop: ^0.3.4 # ========================================= NOT YET SUPPORT NULLSAFETY
+  compressimage: ^0.1.1 # ========================================= NOT YET SUPPORT NULLSAFETY
+  flutter_html: ^1.2.0
 
   # State Managements
   flutter_bloc: ^6.1.2
